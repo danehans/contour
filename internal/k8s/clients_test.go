@@ -31,8 +31,8 @@ func TestResourceKindExists(t *testing.T) {
 			Name: "networking.k8s.io",
 			Versions: []metav1.GroupVersionForDiscovery{
 				{
-					GroupVersion: "networking.k8s.io/v1beta1",
-					Version:      "v1beta1",
+					GroupVersion: "networking.k8s.io/v1",
+					Version:      "v1",
 				},
 			},
 			PreferredVersion: metav1.GroupVersionForDiscovery{
