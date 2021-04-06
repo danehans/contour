@@ -3244,6 +3244,210 @@ ExtensionServiceStatus
 </tr>
 </tbody>
 </table>
+<h3 id="projectcontour.io/v1alpha1.ContainerPort">ContainerPort
+</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#projectcontour.io/v1alpha1.NetworkPublishing">NetworkPublishing</a>)
+</p>
+<p>
+<p>ContainerPort is the schema to specify a network port for a container.
+A container port gives the system additional information about network
+connections a container uses, but is primarily informational.</p>
+</p>
+<table class="table table-striped table-borderless" style="border:none">
+<thead class="border-bottom">
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody class="border-top">
+<tr>
+<td style="white-space:nowrap">
+<code>name</code>
+<br>
+<em>
+string
+</em>
+</td>
+<td>
+<p>Name is an IANA_SVC_NAME within the pod.</p>
+</td>
+</tr>
+<tr>
+<td style="white-space:nowrap">
+<code>portNumber</code>
+<br>
+<em>
+int32
+</em>
+</td>
+<td>
+<p>PortNumber is the network port number to expose on the envoy pod.
+The number must be greater than 0 and less than 65536.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="projectcontour.io/v1alpha1.Envoy">Envoy
+</h3>
+<p>
+<p>Envoy is the Schema for the envoys API.</p>
+</p>
+<table class="table table-striped table-borderless" style="border:none">
+<thead class="border-bottom">
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody class="border-top">
+<tr>
+<td style="white-space:nowrap">
+<code>metadata</code>
+<br>
+<em>
+<a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#objectmeta-v1-meta">
+Kubernetes meta/v1.ObjectMeta
+</a>
+</em>
+</td>
+<td>
+Refer to the Kubernetes API documentation for the fields of the
+<code>metadata</code> field.
+</td>
+</tr>
+<tr>
+<td style="white-space:nowrap">
+<code>spec</code>
+<br>
+<em>
+<a href="#projectcontour.io/v1alpha1.EnvoySpec">
+EnvoySpec
+</a>
+</em>
+</td>
+<td>
+<p>Spec defines the desired state of Envoy.</p>
+<br>
+<br>
+<table style="border:none">
+<tr>
+<td style="white-space:nowrap">
+<code>networkPublishing</code>
+<br>
+<em>
+<a href="#projectcontour.io/v1alpha1.NetworkPublishing">
+NetworkPublishing
+</a>
+</em>
+</td>
+<td>
+<p>NetworkPublishing defines the schema for publishing Envoy to a network.</p>
+<p>See each field for additional details.</p>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="white-space:nowrap">
+<code>status</code>
+<br>
+<em>
+<a href="#projectcontour.io/v1alpha1.EnvoyStatus">
+EnvoyStatus
+</a>
+</em>
+</td>
+<td>
+<p>Status defines the observed state of Envoy.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="projectcontour.io/v1alpha1.EnvoySpec">EnvoySpec
+</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#projectcontour.io/v1alpha1.Envoy">Envoy</a>)
+</p>
+<p>
+<p>EnvoySpec defines the desired state of Envoy.</p>
+</p>
+<table class="table table-striped table-borderless" style="border:none">
+<thead class="border-bottom">
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody class="border-top">
+<tr>
+<td style="white-space:nowrap">
+<code>networkPublishing</code>
+<br>
+<em>
+<a href="#projectcontour.io/v1alpha1.NetworkPublishing">
+NetworkPublishing
+</a>
+</em>
+</td>
+<td>
+<p>NetworkPublishing defines the schema for publishing Envoy to a network.</p>
+<p>See each field for additional details.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="projectcontour.io/v1alpha1.EnvoyStatus">EnvoyStatus
+</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#projectcontour.io/v1alpha1.Envoy">Envoy</a>)
+</p>
+<p>
+<p>EnvoyStatus defines the observed state of Envoy.</p>
+</p>
+<table class="table table-striped table-borderless" style="border:none">
+<thead class="border-bottom">
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody class="border-top">
+<tr>
+<td style="white-space:nowrap">
+<code>availableEnvoys</code>
+<br>
+<em>
+int32
+</em>
+</td>
+<td>
+<p>AvailableEnvoys is the number of observed available Envoy pods.</p>
+</td>
+</tr>
+<tr>
+<td style="white-space:nowrap">
+<code>conditions</code>
+<br>
+<em>
+<a href="https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#condition-v1-meta">
+[]Kubernetes meta/v1.Condition
+</a>
+</em>
+</td>
+<td>
+<p>Conditions represent the observations of an Envoy&rsquo;s current state.
+Known condition types are &ldquo;Available&rdquo;. Reference the condition type
+for additional details.</p>
+</td>
+</tr>
+</tbody>
+</table>
 <h3 id="projectcontour.io/v1alpha1.ExtensionProtocolVersion">ExtensionProtocolVersion
 (<code>string</code> alias)</h3>
 <p>
@@ -3465,6 +3669,214 @@ uint32
 <td>
 <em>(Optional)</em>
 <p>Weight defines proportion of traffic to balance to the Kubernetes Service.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="projectcontour.io/v1alpha1.LoadBalancerProviderType">LoadBalancerProviderType
+(<code>string</code> alias)</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#projectcontour.io/v1alpha1.ProviderLoadBalancerParameters">ProviderLoadBalancerParameters</a>)
+</p>
+<p>
+<p>LoadBalancerProviderType is the underlying infrastructure provider for the
+load balancer. Allowed values are &ldquo;AWS&rdquo;, &ldquo;Azure&rdquo;, and &ldquo;GCP&rdquo;.</p>
+</p>
+<h3 id="projectcontour.io/v1alpha1.LoadBalancerScope">LoadBalancerScope
+(<code>string</code> alias)</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#projectcontour.io/v1alpha1.LoadBalancerStrategy">LoadBalancerStrategy</a>)
+</p>
+<p>
+<p>LoadBalancerScope is the scope at which a load balancer is exposed.</p>
+</p>
+<h3 id="projectcontour.io/v1alpha1.LoadBalancerStrategy">LoadBalancerStrategy
+</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#projectcontour.io/v1alpha1.NetworkPublishing">NetworkPublishing</a>)
+</p>
+<p>
+<p>LoadBalancerStrategy holds parameters for a load balancer.</p>
+</p>
+<table class="table table-striped table-borderless" style="border:none">
+<thead class="border-bottom">
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody class="border-top">
+<tr>
+<td style="white-space:nowrap">
+<code>scope</code>
+<br>
+<em>
+<a href="#projectcontour.io/v1alpha1.LoadBalancerScope">
+LoadBalancerScope
+</a>
+</em>
+</td>
+<td>
+<p>Scope indicates the scope at which the load balancer is exposed.
+Possible values are &ldquo;External&rdquo; and &ldquo;Internal&rdquo;.</p>
+</td>
+</tr>
+<tr>
+<td style="white-space:nowrap">
+<code>providerParameters</code>
+<br>
+<em>
+<a href="#projectcontour.io/v1alpha1.ProviderLoadBalancerParameters">
+ProviderLoadBalancerParameters
+</a>
+</em>
+</td>
+<td>
+<p>providerParameters contains load balancer information specific to
+the underlying infrastructure provider.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="projectcontour.io/v1alpha1.NetworkPublishing">NetworkPublishing
+</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#projectcontour.io/v1alpha1.EnvoySpec">EnvoySpec</a>)
+</p>
+<p>
+<p>NetworkPublishing defines the schema to publish Envoy to a network.</p>
+</p>
+<table class="table table-striped table-borderless" style="border:none">
+<thead class="border-bottom">
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody class="border-top">
+<tr>
+<td style="white-space:nowrap">
+<code>type</code>
+<br>
+<em>
+<a href="#projectcontour.io/v1alpha1.NetworkPublishingType">
+NetworkPublishingType
+</a>
+</em>
+</td>
+<td>
+<p>Type is the type of publishing strategy to use. Valid values are:</p>
+<ul>
+<li>LoadBalancerService</li>
+</ul>
+<p>In this configuration, network endpoints for Envoy use container networking.
+A Kubernetes LoadBalancer Service is created to publish Envoy network
+endpoints. The Service uses port 80 to publish Envoy&rsquo;s HTTP network endpoint
+and port 443 to publish Envoy&rsquo;s HTTPS network endpoint.</p>
+<p>See: <a href="https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer">https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer</a></p>
+<ul>
+<li>NodePortService</li>
+</ul>
+<p>Publishes Envoy network endpoints using a Kubernetes NodePort Service.</p>
+<p>In this configuration, Envoy network endpoints use container networking. A Kubernetes
+NodePort Service is created to publish the network endpoints.</p>
+<p>See: <a href="https://kubernetes.io/docs/concepts/services-networking/service/#nodeport">https://kubernetes.io/docs/concepts/services-networking/service/#nodeport</a></p>
+<ul>
+<li>ClusterIPService</li>
+</ul>
+<p>Publishes Envoy network endpoints using a Kubernetes ClusterIP Service.</p>
+<p>In this configuration, Envoy network endpoints use container networking. A Kubernetes
+ClusterIP Service is created to publish the network endpoints.</p>
+<p>See: <a href="https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types">https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types</a></p>
+</td>
+</tr>
+<tr>
+<td style="white-space:nowrap">
+<code>loadBalancer</code>
+<br>
+<em>
+<a href="#projectcontour.io/v1alpha1.LoadBalancerStrategy">
+LoadBalancerStrategy
+</a>
+</em>
+</td>
+<td>
+<p>loadBalancer holds parameters for the load balancer. Present only if type is
+LoadBalancerService.</p>
+<p>If unspecified, defaults to an external Classic AWS ELB.</p>
+</td>
+</tr>
+<tr>
+<td style="white-space:nowrap">
+<code>containerPorts</code>
+<br>
+<em>
+<a href="#projectcontour.io/v1alpha1.ContainerPort">
+[]ContainerPort
+</a>
+</em>
+</td>
+<td>
+<p>ContainerPorts is a list of container ports to expose from the Envoy container(s).
+Exposing a port here gives the system additional information about the network
+connections the Envoy container uses, but is primarily informational. Not specifying
+a port here DOES NOT prevent that port from being exposed by Envoy. Any port which is
+listening on the default &ldquo;0.0.0.0&rdquo; address inside the Envoy container will be accessible
+from the network. Names and port numbers must be unique in the list container ports. Two
+ports must be specified, one named &ldquo;http&rdquo; for Envoy&rsquo;s insecure service and one named
+&ldquo;https&rdquo; for Envoy&rsquo;s secure service.</p>
+<p>TODO [danehans]: Update minItems to 1, requiring only https when the following issue
+is fixed: <a href="https://github.com/projectcontour/contour/issues/2577">https://github.com/projectcontour/contour/issues/2577</a>.</p>
+<p>TODO [danehans]: Increase maxItems when <a href="https://github.com/projectcontour/contour/pull/3263">https://github.com/projectcontour/contour/pull/3263</a>
+is implemented.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="projectcontour.io/v1alpha1.NetworkPublishingType">NetworkPublishingType
+(<code>string</code> alias)</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#projectcontour.io/v1alpha1.NetworkPublishing">NetworkPublishing</a>)
+</p>
+<p>
+<p>EndpointPublishingType is a way to publish network endpoints.</p>
+</p>
+<h3 id="projectcontour.io/v1alpha1.ProviderLoadBalancerParameters">ProviderLoadBalancerParameters
+</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#projectcontour.io/v1alpha1.LoadBalancerStrategy">LoadBalancerStrategy</a>)
+</p>
+<p>
+<p>ProviderLoadBalancerParameters holds desired load balancer information
+specific to the underlying infrastructure provider.</p>
+</p>
+<table class="table table-striped table-borderless" style="border:none">
+<thead class="border-bottom">
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody class="border-top">
+<tr>
+<td style="white-space:nowrap">
+<code>type</code>
+<br>
+<em>
+<a href="#projectcontour.io/v1alpha1.LoadBalancerProviderType">
+LoadBalancerProviderType
+</a>
+</em>
+</td>
+<td>
+<p>type is the underlying infrastructure provider for the load balancer.
+Allowed values are &ldquo;AWS&rdquo;, &ldquo;Azure&rdquo;, and &ldquo;GCP&rdquo;.</p>
 </td>
 </tr>
 </tbody>

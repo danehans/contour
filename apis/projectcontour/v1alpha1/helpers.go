@@ -26,3 +26,15 @@ func (status *ExtensionServiceStatus) GetConditionFor(condType string) *contour_
 
 	return nil
 }
+
+// GetConditionFor returns a pointer to the condition for a given type,
+// or nil if there are none currently present.
+func (s *EnvoyStatus) GetConditionFor(condType string) *contour_api_v1.DetailedCondition {
+	for i, cond := range s.Conditions {
+		if cond.Type == condType {
+			return &s.Conditions[i]
+		}
+	}
+
+	return nil
+}
