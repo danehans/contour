@@ -32,12 +32,16 @@ import (
 // +kubebuilder:rbac:groups="projectcontour.io",resources=extensionservices,verbs=get;list;watch
 // +kubebuilder:rbac:groups="projectcontour.io",resources=extensionservices/status,verbs=create;get;update
 
+// +kubebuilder:rbac:groups="projectcontour.io",resources=envoys,verbs=get;list;watch
+// +kubebuilder:rbac:groups="projectcontour.io",resources=envoys/status,verbs=create;get;update
+
 // DefaultResources ...
 func DefaultResources() []schema.GroupVersionResource {
 	return []schema.GroupVersionResource{
 		contour_api_v1.HTTPProxyGVR,
 		contour_api_v1.TLSCertificateDelegationGVR,
 		contour_api_v1alpha1.ExtensionServiceGVR,
+		contour_api_v1alpha1.EnvoyGVR,
 		corev1.SchemeGroupVersion.WithResource("services"),
 	}
 }

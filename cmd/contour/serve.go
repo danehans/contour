@@ -62,6 +62,11 @@ import (
 // Add RBAC policy to support getting CRDs.
 // +kubebuilder:rbac:groups="apiextensions.k8s.io",resources=customresourcedefinitions,verbs=list
 
+// Add RBAC policy to support managing Envoy.
+// +kubebuilder:rbac:groups=projectcontour.io,resources=envoys,verbs=get;list;watch;update
+// +kubebuilder:rbac:groups=projectcontour.io,resources=envoys/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups="",resources=services,verbs=get;list;watch;delete;create;update
+
 // registerServe registers the serve subcommand and flags
 // with the Application provided.
 func registerServe(app *kingpin.Application) (*kingpin.CmdClause, *serveContext) {
@@ -385,6 +390,7 @@ func doServe(log logrus.FieldLogger, ctx *serveContext) error {
 	}
 
 	// Inform on DefaultResources.
+	// TODO [danehans]: Should we filter envoy custom resources based on the ns Contour is running in?
 	for _, r := range k8s.DefaultResources() {
 		inf, err := clients.InformerForResource(r)
 		if err != nil {

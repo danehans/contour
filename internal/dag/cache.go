@@ -65,6 +65,7 @@ type KubernetesCache struct {
 	tlsroutes                 map[types.NamespacedName]*gatewayapi_v1alpha1.TLSRoute
 	backendpolicies           map[types.NamespacedName]*gatewayapi_v1alpha1.BackendPolicy
 	extensions                map[types.NamespacedName]*contour_api_v1alpha1.ExtensionService
+	envoys                    map[types.NamespacedName]*contour_api_v1alpha1.Envoy
 
 	initialize sync.Once
 
@@ -83,6 +84,7 @@ func (kc *KubernetesCache) init() {
 	kc.tlsroutes = make(map[types.NamespacedName]*gatewayapi_v1alpha1.TLSRoute)
 	kc.backendpolicies = make(map[types.NamespacedName]*gatewayapi_v1alpha1.BackendPolicy)
 	kc.extensions = make(map[types.NamespacedName]*contour_api_v1alpha1.ExtensionService)
+	kc.envoys = make(map[types.NamespacedName]*contour_api_v1alpha1.Envoy)
 }
 
 // matchesIngressClass returns true if the given IngressClass
@@ -257,7 +259,9 @@ func (kc *KubernetesCache) Insert(obj interface{}) bool {
 	case *contour_api_v1alpha1.ExtensionService:
 		kc.extensions[k8s.NamespacedNameOf(obj)] = obj
 		return true
-
+	case *contour_api_v1alpha1.Envoy:
+		kc.envoys[k8s.NamespacedNameOf(obj)] = obj
+		return true
 	default:
 		// not an interesting object
 		kc.WithField("object", obj).Error("insert unknown object")
@@ -453,7 +457,11 @@ func (kc *KubernetesCache) remove(obj interface{}) bool {
 		_, ok := kc.extensions[m]
 		delete(kc.extensions, m)
 		return ok
-
+	case *contour_api_v1alpha1.Envoy:
+		m := k8s.NamespacedNameOf(obj)
+		_, ok := kc.envoys[m]
+		delete(kc.envoys, m)
+		return ok
 	default:
 		// not interesting
 		kc.WithField("object", obj).Error("remove unknown object")
