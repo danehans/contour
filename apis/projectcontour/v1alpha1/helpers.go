@@ -13,7 +13,9 @@
 
 package v1alpha1
 
-import contour_api_v1 "github.com/projectcontour/contour/apis/projectcontour/v1"
+import (
+	contour_api_v1 "github.com/projectcontour/contour/apis/projectcontour/v1"
+)
 
 // GetConditionFor returns the a pointer to the condition for a given type,
 // or nil if there are none currently present.
@@ -25,4 +27,26 @@ func (status *ExtensionServiceStatus) GetConditionFor(condType string) *contour_
 	}
 
 	return nil
+}
+
+// GetConditionFor returns a pointer to the condition for a given type,
+// or nil if there are none currently present.
+func (status *EnvoyStatus) GetConditionFor(condType string) *contour_api_v1.DetailedCondition {
+	for i, cond := range status.Conditions {
+		if cond.Type == condType {
+			return &status.Conditions[i]
+		}
+	}
+
+	return nil
+}
+
+// IsFinalized returns true if Envoy is finalized.
+func (e *Envoy) IsFinalized() bool {
+	for _, f := range e.Finalizers {
+		if f == EnvoyFinalizer {
+			return true
+		}
+	}
+	return false
 }

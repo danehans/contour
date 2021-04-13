@@ -19,7 +19,10 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-var ExtensionServiceGVR = GroupVersion.WithResource("extensionservices")
+var (
+	ExtensionServiceGVR = GroupVersion.WithResource("extensionservices")
+	EnvoyGVR            = GroupVersion.WithResource("envoys")
+)
 
 var (
 	// GroupVersion is group version used to register these objects
@@ -37,6 +40,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		GroupVersion,
 		&ExtensionService{},
 		&ExtensionServiceList{},
+		&Envoy{},
+		&EnvoyList{},
 	)
 
 	metav1.AddToGroupVersion(scheme, GroupVersion)
