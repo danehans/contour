@@ -418,6 +418,11 @@ func doServe(log logrus.FieldLogger, ctx *serveContext) error {
 		log.WithError(err).Fatal("failed to create extensionservice-controller")
 	}
 
+	// Create and register the Envoy controller with the manager.
+	if _, err := contour_cache.NewEnvoyController(mgr, dynamicHandler, log.WithField("context", "envoy-controller")); err != nil {
+		log.WithError(err).Fatal("failed to create envoy-controller")
+	}
+
 	// If Ingress v1 resource exist, then add informers to watch, otherwise
 	// add Ingress v1beta1 informers.
 	if clients.ResourcesExist(k8s.IngressV1Resources()...) {
@@ -611,6 +616,7 @@ func doServe(log logrus.FieldLogger, ctx *serveContext) error {
 	g.Add(lbsw.Start)
 
 	// Register an informer to watch envoy's service if we haven't been given static details.
+	// TODO [danehans]: Understand how this code block is affected by contour managing the Envoy service.
 	if lbAddr := ctx.Config.IngressStatusAddress; lbAddr != "" {
 		log.WithField("loadbalancer-address", lbAddr).Info("Using supplied information for Ingress status")
 		lbsw.lbStatus <- parseStatusFlag(lbAddr)

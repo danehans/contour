@@ -17,6 +17,7 @@ package status
 
 import (
 	contour_api_v1 "github.com/projectcontour/contour/apis/projectcontour/v1"
+	contour_api_v1alpha1 "github.com/projectcontour/contour/apis/projectcontour/v1alpha1"
 	"github.com/projectcontour/contour/internal/k8s"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -36,6 +37,7 @@ const ValidCondition ConditionType = "Valid"
 func NewCache(gateway types.NamespacedName) Cache {
 	return Cache{
 		proxyUpdates:     make(map[types.NamespacedName]*ProxyUpdate),
+		envoyUpdates:     make(map[types.NamespacedName]*EnvoyUpdate),
 		gatewayRef:       gateway,
 		httpRouteUpdates: make(map[types.NamespacedName]*HTTPRouteUpdate),
 		entries:          make(map[string]map[types.NamespacedName]CacheEntry),
@@ -52,6 +54,7 @@ type CacheEntry interface {
 // KindAccessor.
 type Cache struct {
 	proxyUpdates map[types.NamespacedName]*ProxyUpdate
+	envoyUpdates map[types.NamespacedName]*EnvoyUpdate
 
 	gatewayRef       types.NamespacedName
 	httpRouteUpdates map[types.NamespacedName]*HTTPRouteUpdate
@@ -100,6 +103,16 @@ func (c *Cache) GetStatusUpdates() []k8s.StatusUpdate {
 		flattened = append(flattened, update)
 	}
 
+	for fullname, eu := range c.envoyUpdates {
+		update := k8s.StatusUpdate{
+			NamespacedName: fullname,
+			Resource:       contour_api_v1alpha1.EnvoyGVR,
+			Mutator:        eu,
+		}
+
+		flattened = append(flattened, update)
+	}
+
 	for fullname, routeUpdate := range c.httpRouteUpdates {
 		update := k8s.StatusUpdate{
 			NamespacedName: fullname,
@@ -131,6 +144,15 @@ func (c *Cache) GetProxyUpdates() []*ProxyUpdate {
 	var allUpdates []*ProxyUpdate
 	for _, pu := range c.proxyUpdates {
 		allUpdates = append(allUpdates, pu)
+	}
+	return allUpdates
+}
+
+// GetEnvoyUpdates gets the underlying EnvoyUpdate objects from the cache.
+func (c *Cache) GetEnvoyUpdates() []*EnvoyUpdate {
+	var allUpdates []*EnvoyUpdate
+	for _, eu := range c.envoyUpdates {
+		allUpdates = append(allUpdates, eu)
 	}
 	return allUpdates
 }

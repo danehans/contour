@@ -17,6 +17,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	contour_api_v1 "github.com/projectcontour/contour/apis/projectcontour/v1"
+	contour_api_v1alpha1 "github.com/projectcontour/contour/apis/projectcontour/v1alpha1"
 	networking_v1 "k8s.io/api/networking/v1"
 	"k8s.io/api/networking/v1beta1"
 )
@@ -28,6 +29,7 @@ import (
 // networking.k8s.io/ingress/v1
 // networking.k8s.io/ingress/v1beta1
 // projectcontour.io/v1
+// projectcontour.io/v1alpha1
 func isStatusEqual(objA, objB interface{}) bool {
 
 	switch a := objA.(type) {
@@ -54,6 +56,13 @@ func isStatusEqual(objA, objB interface{}) bool {
 			// are always different for each DAG rebuild (Issue #2979).
 			if cmp.Equal(a.Status, b.Status,
 				cmpopts.IgnoreFields(contour_api_v1.Condition{}, "LastTransitionTime")) {
+				return true
+			}
+		}
+	case *contour_api_v1alpha1.Envoy:
+		switch b := objB.(type) {
+		case *contour_api_v1alpha1.Envoy:
+			if cmp.Equal(a.Status, b.Status) {
 				return true
 			}
 		}

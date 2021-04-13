@@ -52,6 +52,8 @@ func KindOf(obj interface{}) string {
 			return "TLSCertificateDelegation"
 		case *v1alpha1.ExtensionService:
 			return "ExtensionService"
+		case *v1alpha1.Envoy:
+			return "Envoy"
 		case *unstructured.Unstructured:
 			return obj.GetKind()
 		default:
@@ -77,7 +79,7 @@ func VersionOf(obj interface{}) string {
 			return v1beta1.SchemeGroupVersion.String()
 		case *contour_api_v1.HTTPProxy, *contour_api_v1.TLSCertificateDelegation:
 			return contour_api_v1.GroupVersion.String()
-		case *v1alpha1.ExtensionService:
+		case *v1alpha1.ExtensionService, *v1alpha1.Envoy:
 			return v1alpha1.GroupVersion.String()
 		case *unstructured.Unstructured:
 			return obj.GetAPIVersion()

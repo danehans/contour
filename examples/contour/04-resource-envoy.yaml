@@ -1,0 +1,7 @@
+---
+apiVersion: projectcontour.io/v1alpha1
+kind: Envoy
+metadata:
+  name: example
+  namespace: projectcontour
+spec: {}

@@ -56,6 +56,8 @@ func (s *StatusAddressUpdater) Set(status v1.LoadBalancerStatus) {
 // OnAdd updates the given Ingress or HTTPProxy object with the
 // current load balancer address. Note that this method can be called
 // concurrently from an informer or from Contour itself.
+// TODO [danehans]: Surface the Envoy Service IP through Gateway status instead of the Envoy CRD:
+// https://github.com/kubernetes-sigs/gateway-api/blob/v0.2.0/apis/v1alpha1/gateway_types.go#L531-L540
 func (s *StatusAddressUpdater) OnAdd(obj interface{}) {
 	// Hold the mutex to get a shallow copy. We don't need to
 	// deep copy, since all the references are read-only.

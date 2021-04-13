@@ -46,8 +46,11 @@ rules:
   resources:
   - services
   verbs:
+  - create
+  - delete
   - get
   - list
+  - update
   - watch
 - apiGroups:
   - apiextensions.k8s.io
@@ -90,6 +93,23 @@ rules:
   - get
   - list
   - watch
+- apiGroups:
+  - projectcontour.io
+  resources:
+  - envoys
+  verbs:
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
+  - projectcontour.io
+  resources:
+  - envoys/status
+  verbs:
+  - get
+  - patch
+  - update
 - apiGroups:
   - projectcontour.io
   resources:

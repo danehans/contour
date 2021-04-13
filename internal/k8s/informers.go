@@ -27,10 +27,12 @@ import (
 // +kubebuilder:rbac:groups="projectcontour.io",resources=httpproxies/status,verbs=create;get;update
 // +kubebuilder:rbac:groups="projectcontour.io",resources=extensionservices,verbs=get;list;watch
 // +kubebuilder:rbac:groups="projectcontour.io",resources=extensionservices/status,verbs=create;get;update
+// +kubebuilder:rbac:groups="projectcontour.io",resources=envoys,verbs=get;list;watch;update
+// +kubebuilder:rbac:groups="projectcontour.io",resources=envoys/status,verbs=get;update;patch
 
 // +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch
 // +kubebuilder:rbac:groups="",resources=endpoints,verbs=get;list;watch
-// +kubebuilder:rbac:groups="",resources=services,verbs=get;list;watch
+// +kubebuilder:rbac:groups="",resources=services,verbs=get;list;watch;delete;create;update
 // +kubebuilder:rbac:groups="",resources=namespaces,verbs=get;list;watch
 
 func IngressV1Resources() []schema.GroupVersionResource {

@@ -39,6 +39,7 @@ func TestKindOf(t *testing.T) {
 		{"HTTPProxy", &contour_api_v1.HTTPProxy{}},
 		{"TLSCertificateDelegation", &contour_api_v1.TLSCertificateDelegation{}},
 		{"ExtensionService", &v1alpha1.ExtensionService{}},
+		{"Envoy", &v1alpha1.Envoy{}},
 		{"Foo", &unstructured.Unstructured{
 			Object: map[string]interface{}{
 				"apiVersion": "test.projectcontour.io/v1",
@@ -64,6 +65,7 @@ func TestVersionOf(t *testing.T) {
 		{"projectcontour.io/v1", &contour_api_v1.HTTPProxy{}},
 		{"projectcontour.io/v1", &contour_api_v1.TLSCertificateDelegation{}},
 		{"projectcontour.io/v1alpha1", &v1alpha1.ExtensionService{}},
+		{"projectcontour.io/v1alpha1", &v1alpha1.Envoy{}},
 		{"test.projectcontour.io/v1", &unstructured.Unstructured{
 			Object: map[string]interface{}{
 				"apiVersion": "test.projectcontour.io/v1",
