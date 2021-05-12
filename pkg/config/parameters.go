@@ -32,6 +32,7 @@ type ServerType string
 
 const ContourServerType ServerType = "contour"
 const EnvoyServerType ServerType = "envoy"
+const ContourGatewayClass = "projectcontour.io/contour"
 
 // Validate the xDS server type.
 func (s ServerType) Validate() error {

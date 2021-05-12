@@ -19,6 +19,7 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	utilclock "k8s.io/apimachinery/pkg/util/clock"
 	gatewayapi_v1alpha1 "sigs.k8s.io/gateway-api/apis/v1alpha1"
 )
 
@@ -37,6 +38,14 @@ const ReasonDegraded RouteReasonType = "Degraded"
 const ReasonValid RouteReasonType = "Valid"
 const ReasonErrorsExist RouteReasonType = "ErrorsExist"
 const ReasonGatewayAllowMismatch RouteReasonType = "GatewayAllowMismatch"
+
+type GatewayClassReasonType string
+
+const reasonValidGatewayClass = "Valid"
+const reasonInvalidGatewayClass = "Invalid"
+
+// clock is used to set lastTransitionTime on status conditions.
+var clock utilclock.Clock = utilclock.RealClock{}
 
 type ConditionsUpdate struct {
 	FullName           types.NamespacedName
@@ -176,4 +185,57 @@ func (c *Cache) getGatewayConditions(gatewayStatus []gatewayapi_v1alpha1.RouteGa
 		}
 	}
 	return map[gatewayapi_v1alpha1.RouteConditionType]metav1.Condition{}
+}
+
+// computeGatewayClassAdmittedCondition computes the Admitted status condition based
+// on the provided valid.
+func computeGatewayClassAdmittedCondition(valid bool) metav1.Condition {
+	c := metav1.Condition{
+		Type:    string(gatewayapi_v1alpha1.GatewayClassConditionStatusAdmitted),
+		Status:  metav1.ConditionTrue,
+		Reason:  reasonValidGatewayClass,
+		Message: "Valid GatewayClass.",
+	}
+
+	if !valid {
+		c.Status = metav1.ConditionFalse
+		c.Reason = reasonInvalidGatewayClass
+		c.Message = "Invalid GatewayClass."
+	}
+
+	return c
+}
+
+// mergeConditions adds or updates matching conditions, and updates the transition
+// time if details of a condition have changed. Returns the updated condition array.
+func mergeConditions(conditions []metav1.Condition, updates ...metav1.Condition) []metav1.Condition {
+	now := metav1.NewTime(clock.Now())
+	var additions []metav1.Condition
+	for i, update := range updates {
+		add := true
+		for j, cond := range conditions {
+			if cond.Type == update.Type {
+				add = false
+				if conditionChanged(cond, update) {
+					conditions[j].Status = update.Status
+					conditions[j].Reason = update.Reason
+					conditions[j].Message = update.Message
+					if cond.Status != update.Status {
+						conditions[j].LastTransitionTime = now
+					}
+					break
+				}
+			}
+		}
+		if add {
+			updates[i].LastTransitionTime = now
+			additions = append(additions, updates[i])
+		}
+	}
+	conditions = append(conditions, additions...)
+	return conditions
+}
+
+func conditionChanged(a, b metav1.Condition) bool {
+	return a.Status != b.Status || a.Reason != b.Reason || a.Message != b.Message
 }

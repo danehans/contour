@@ -421,7 +421,12 @@ func doServe(log logrus.FieldLogger, ctx *serveContext) error {
 			// Add the GatetwayAPI Scheme.
 			err = gatewayapi_v1alpha1.AddToScheme(mgr.GetScheme())
 			if err != nil {
-				log.WithError(err).Fatal("unable to add GatewayAPI to scheme.")
+				log.WithError(err).Fatal("unable to add Gateway API to scheme.")
+			}
+
+			// Create and register the NewGatewayClassController controller with the manager.
+			if _, err := controller.NewGatewayClassController(mgr, &dynamicHandler, log.WithField("context", "gatewayclass-controller")); err != nil {
+				log.WithError(err).Fatal("failed to create gatewayclass-controller")
 			}
 
 			// Create and register the NewGatewayController controller with the manager.
@@ -449,7 +454,7 @@ func doServe(log logrus.FieldLogger, ctx *serveContext) error {
 				return mgr.Start(signals.SetupSignalHandler())
 			})
 		} else {
-			log.Fatalf("GatewayAPI Gateway configured but APIs not installed in cluster.")
+			log.Fatalf("Gateway API configured but CRDs not installed in cluster.")
 		}
 	}
 
