@@ -24,13 +24,13 @@ import (
 	gatewayv1a1 "sigs.k8s.io/gateway-api/apis/v1alpha1"
 )
 
-// GatewayClass returns nil if gc is a valid GatewayClass,
+// GatewayClass returns nil if gw is a valid GatewayClass,
 // otherwise an error.
 func GatewayClass(gc *gatewayv1a1.GatewayClass) error {
 	return parameterRef(gc)
 }
 
-// parameterRef returns nil if parametersRef of gc is valid,
+// parameterRef returns nil if parametersRef of gw is valid,
 // otherwise an error.
 func parameterRef(gc *gatewayv1a1.GatewayClass) error {
 	var errs []error

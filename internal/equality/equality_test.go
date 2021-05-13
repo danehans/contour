@@ -143,3 +143,148 @@ func TestGatewayClassStatusChanged(t *testing.T) {
 		}
 	}
 }
+
+func TestGatewayStatusChanged(t *testing.T) {
+	testCases := []struct {
+		name     string
+		expected bool
+		a, b     gatewayapi_v1alpha1.GatewayStatus
+	}{
+		{
+			name:     "zero-valued status should be equal",
+			expected: false,
+		},
+		{
+			name:     "nil and non-nil slices should be equal",
+			expected: false,
+			a: gatewayapi_v1alpha1.GatewayStatus{
+				Conditions: []metav1.Condition{},
+			},
+		},
+		{
+			name:     "empty slices should be equal",
+			expected: false,
+			a: gatewayapi_v1alpha1.GatewayStatus{
+				Conditions: []metav1.Condition{},
+			},
+			b: gatewayapi_v1alpha1.GatewayStatus{
+				Conditions: []metav1.Condition{},
+			},
+		},
+		{
+			name:     "condition LastTransitionTime should not be ignored",
+			expected: true,
+			a: gatewayapi_v1alpha1.GatewayStatus{
+				Conditions: []metav1.Condition{
+					{
+						Type:               string(gatewayapi_v1alpha1.GatewayConditionScheduled),
+						Status:             metav1.ConditionTrue,
+						LastTransitionTime: metav1.Unix(0, 0),
+					},
+				},
+			},
+			b: gatewayapi_v1alpha1.GatewayStatus{
+				Conditions: []metav1.Condition{
+					{
+						Type:               string(gatewayapi_v1alpha1.GatewayConditionScheduled),
+						Status:             metav1.ConditionTrue,
+						LastTransitionTime: metav1.Unix(1, 0),
+					},
+				},
+			},
+		},
+		{
+			name:     "check condition status differs",
+			expected: true,
+			a: gatewayapi_v1alpha1.GatewayStatus{
+				Conditions: []metav1.Condition{
+					{
+						Type:   string(gatewayapi_v1alpha1.GatewayConditionScheduled),
+						Status: metav1.ConditionFalse,
+					},
+				},
+			},
+			b: gatewayapi_v1alpha1.GatewayStatus{
+				Conditions: []metav1.Condition{
+					{
+						Type:   string(gatewayapi_v1alpha1.GatewayConditionScheduled),
+						Status: metav1.ConditionTrue,
+					},
+				},
+			},
+		},
+		{
+			name:     "check condition types differs",
+			expected: true,
+			a: gatewayapi_v1alpha1.GatewayStatus{
+				Conditions: []metav1.Condition{
+					{
+						Type:   string(gatewayapi_v1alpha1.GatewayConditionScheduled),
+						Status: metav1.ConditionFalse,
+					},
+				},
+			},
+			b: gatewayapi_v1alpha1.GatewayStatus{
+				Conditions: []metav1.Condition{
+					{
+						Type:   string(gatewayapi_v1alpha1.GatewayConditionReady),
+						Status: metav1.ConditionFalse,
+					},
+				},
+			},
+		},
+		{
+			name:     "check condition reason differs",
+			expected: true,
+			a: gatewayapi_v1alpha1.GatewayStatus{
+				Conditions: []metav1.Condition{
+					{
+						Type:   string(gatewayapi_v1alpha1.GatewayConditionScheduled),
+						Status: metav1.ConditionFalse,
+						Reason: "foo",
+					},
+				},
+			},
+			b: gatewayapi_v1alpha1.GatewayStatus{
+				Conditions: []metav1.Condition{
+					{
+						Type:   string(gatewayapi_v1alpha1.GatewayConditionScheduled),
+						Status: metav1.ConditionFalse,
+						Reason: "bar",
+					},
+				},
+			},
+		},
+		{
+			name:     "check duplicate with single condition",
+			expected: true,
+			a: gatewayapi_v1alpha1.GatewayStatus{
+				Conditions: []metav1.Condition{
+					{
+						Type:    string(gatewayapi_v1alpha1.GatewayConditionScheduled),
+						Message: "foo",
+					},
+				},
+			},
+			b: gatewayapi_v1alpha1.GatewayStatus{
+				Conditions: []metav1.Condition{
+					{
+						Type:    string(gatewayapi_v1alpha1.GatewayConditionScheduled),
+						Message: "foo",
+					},
+					{
+						Type:    string(gatewayapi_v1alpha1.GatewayConditionScheduled),
+						Message: "foo",
+					},
+				},
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		if actual := GatewayStatusChanged(tc.a, tc.b); actual != tc.expected {
+			t.Fatalf("%q: expected %v, got %v", tc.name, tc.expected, actual)
+		}
+	}
+}
+

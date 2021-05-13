@@ -23,3 +23,9 @@ import (
 func GatewayClassStatusChanged(current, expected gatewayapi_v1alpha1.GatewayClassStatus) bool {
 	return !apiequality.Semantic.DeepEqual(current.Conditions, expected.Conditions)
 }
+
+// GatewayStatusChanged checks if current and expected match and if not,
+// returns true.
+func GatewayStatusChanged(current, expected gatewayapi_v1alpha1.GatewayStatus) bool {
+	return !apiequality.Semantic.DeepEqual(current.Conditions, expected.Conditions)
+}

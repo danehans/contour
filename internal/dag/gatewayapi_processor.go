@@ -64,12 +64,6 @@ func (p *GatewayAPIProcessor) Run(dag *DAG, source *KubernetesCache) {
 		p.source = nil
 	}()
 
-	// Gateway must be defined for resources to be processed.
-	if p.source.gateway == nil {
-		p.Error("Gateway is not defined!")
-		return
-	}
-
 	for _, listener := range p.source.gateway.Spec.Listeners {
 
 		var matchingRoutes []*gatewayapi_v1alpha1.HTTPRoute

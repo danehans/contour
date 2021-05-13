@@ -100,6 +100,39 @@ func TestComputeGatewayClassAdmittedCondition(t *testing.T) {
 	}
 }
 
+func TestComputeGatewayReadyCondition(t *testing.T) {
+	testCases := []struct {
+		description string
+		valid       bool
+		expect      metav1.Condition
+	}{
+		{
+			description: "valid gateway",
+			valid:       true,
+			expect: metav1.Condition{
+				Type:   string(gatewayapi_v1alpha1.GatewayConditionReady),
+				Status: metav1.ConditionTrue,
+			},
+		},
+		{
+			description: "invalid gateway",
+			valid:       false,
+			expect: metav1.Condition{
+				Type:   string(gatewayapi_v1alpha1.GatewayConditionReady),
+				Status: metav1.ConditionFalse,
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		actual := computeGatewayReadyCondition(tc.valid)
+		if !apiequality.Semantic.DeepEqual(actual.Type, tc.expect.Type) ||
+			!apiequality.Semantic.DeepEqual(actual.Status, tc.expect.Status) {
+			t.Fatalf("%q: expected %#v, got %#v", tc.description, tc.expect, actual)
+		}
+	}
+}
+
 func TestConditionChanged(t *testing.T) {
 	testCases := []struct {
 		name     string
