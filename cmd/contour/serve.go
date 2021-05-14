@@ -418,10 +418,15 @@ func doServe(log logrus.FieldLogger, ctx *serveContext) error {
 				log.WithError(err).Fatal("unable to set up controller manager")
 			}
 
-			// Add the GatetwayAPI Scheme.
+			// Add the Gatetway API Scheme.
 			err = gatewayapi_v1alpha1.AddToScheme(mgr.GetScheme())
 			if err != nil {
 				log.WithError(err).Fatal("unable to add GatewayAPI to scheme.")
+			}
+
+			// Create and register the gatewayclass controller with the manager.
+			if _, err := controller.NewGatewayClassController(mgr, &dynamicHandler, log.WithField("context", "gatewayclass-controller"), ctx.Config.GatewayClassController); err != nil {
+				log.WithError(err).Fatal("failed to create gatewayclass-controller")
 			}
 
 			// Create and register the NewGatewayController controller with the manager.
